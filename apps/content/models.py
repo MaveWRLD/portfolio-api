@@ -72,3 +72,14 @@ class ExperienceSection(models.Model):
 
     def __str__(self):
         return "Experience section"
+
+
+class ProjectsSection(models.Model):
+    heading = models.CharField(max_length=300, blank=True, default="")
+
+    class Meta:
+        verbose_name = "Projects section"
+        verbose_name_plural = "Projects section"
+
+    def __str__(self):
+        return "Projects section"

@@ -102,3 +102,19 @@ def test_experience_section_reflects_saved_values(client):
     response = client.get("/api/content/experience/")
     body = response.json()
     assert body["experiences"] == [{"company": "Acme", "role": "Backend Engineer", "period": "2022–Present"}]
+
+
+@pytest.mark.django_db
+def test_projects_section_get_creates_singleton_and_shapes_response(client):
+    response = client.get("/api/content/projects/")
+    assert response.status_code == 200
+    assert response.json() == {"heading": ""}
+
+
+@pytest.mark.django_db
+def test_projects_section_reflects_saved_values(client):
+    from apps.content.models import ProjectsSection
+
+    ProjectsSection.objects.create(pk=1, heading="Selected work")
+    response = client.get("/api/content/projects/")
+    assert response.json() == {"heading": "Selected work"}
