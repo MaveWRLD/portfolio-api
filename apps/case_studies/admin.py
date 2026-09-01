@@ -4,14 +4,15 @@ from .models import CaseStudy
 
 @admin.register(CaseStudy)
 class CaseStudyAdmin(admin.ModelAdmin):
-    list_display = ["title", "category", "date", "featured", "client", "created_at"]
-    list_filter = ["featured", "category", "date"]
-    search_fields = ["title", "detail_title", "slug", "client", "tool"]
+    list_display = ["title", "date", "featured", "created_at"]
+    list_filter = ["featured", "date"]
+    search_fields = ["title", "slug"]
     prepopulated_fields = {"slug": ("title",)}
     readonly_fields = ["created_at", "updated_at"]
     fieldsets = (
-        (None, {"fields": ("title", "slug", "category", "date")}),
-        ("Details", {"fields": ("detail_title", "budget", "client", "tool", "featured")}),
-        ("Media", {"fields": ("banner", "gallery")}),
+        (None, {"fields": ("title", "slug", "date")}),
+        ("Details", {"fields": ("description", "tags", "source_url", "featured")}),
+        ("Case study", {"fields": ("problem", "architecture", "my_role", "outcome")}),
+        ("Media", {"fields": ("banner",)}),
         ("Timestamps", {"fields": ("created_at", "updated_at"), "classes": ("collapse",)}),
     )

@@ -9,8 +9,8 @@ class CaseStudyViewSet(viewsets.ModelViewSet):
     queryset = CaseStudy.objects.all()
     permission_classes = [IsAdminOrReadOnly]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_fields = ["featured", "category"]
-    search_fields = ["title", "detail_title", "category", "client", "tool"]
+    filterset_fields = ["featured"]
+    search_fields = ["title", "description"]
     ordering_fields = ["date", "created_at", "title"]
     ordering = ["-date", "-created_at"]
     lookup_field = "slug"
