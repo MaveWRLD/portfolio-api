@@ -52,3 +52,7 @@ build/
 # Migrations (keep initial, ignore generated)
 # apps/*/migrations/*.py
 # !apps/*/migrations/__init__.py
+
+# Tooling artifacts
+.claude/
+.playwright-mcp/
