@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import SiteSettings
+from .models import SiteSettings, HeroSection
 
 
 class SingletonAdmin(admin.ModelAdmin):
@@ -15,3 +15,8 @@ class SingletonAdmin(admin.ModelAdmin):
 @admin.register(SiteSettings)
 class SiteSettingsAdmin(SingletonAdmin):
     list_display = ["name", "footer_tagline"]
+
+
+@admin.register(HeroSection)
+class HeroSectionAdmin(SingletonAdmin):
+    list_display = ["headline", "eyebrow"]

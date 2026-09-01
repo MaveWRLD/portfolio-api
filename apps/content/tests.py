@@ -15,3 +15,35 @@ def test_site_settings_reflects_saved_values(client):
     SiteSettings.objects.create(pk=1, name="Jacob Quaye", footer_tagline="Backend engineer")
     response = client.get("/api/content/settings/")
     assert response.json() == {"name": "Jacob Quaye", "footerTagline": "Backend engineer"}
+
+
+@pytest.mark.django_db
+def test_hero_section_get_creates_singleton_and_shapes_response(client):
+    response = client.get("/api/content/hero/")
+    assert response.status_code == 200
+    body = response.json()
+    assert set(body.keys()) == {
+        "eyebrow", "headline", "subheading", "photo", "cvUrl", "githubUrl", "linkedinUrl",
+    }
+    assert body["photo"] is None
+
+
+@pytest.mark.django_db
+def test_hero_section_reflects_saved_values(client):
+    from apps.content.models import HeroSection
+
+    HeroSection.objects.create(
+        pk=1,
+        eyebrow="Hi, I'm Jacob",
+        headline="I build the systems behind the product",
+        subheading="APIs, data pipelines, infrastructure.",
+        cv_url="https://drive.google.com/x",
+        github_url="https://github.com/jquaye",
+        linkedin_url="https://linkedin.com/in/jquaye",
+    )
+    response = client.get("/api/content/hero/")
+    body = response.json()
+    assert body["headline"] == "I build the systems behind the product"
+    assert body["cvUrl"] == "https://drive.google.com/x"
+    assert body["githubUrl"] == "https://github.com/jquaye"
+    assert body["linkedinUrl"] == "https://linkedin.com/in/jquaye"

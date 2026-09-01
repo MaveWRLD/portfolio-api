@@ -1,6 +1,6 @@
 from rest_framework import generics
-from .models import SiteSettings
-from .serializers import SiteSettingsSerializer
+from .models import SiteSettings, HeroSection
+from .serializers import SiteSettingsSerializer, HeroSectionSerializer
 
 
 class SingletonRetrieveAPIView(generics.RetrieveAPIView):
@@ -17,3 +17,8 @@ class SingletonRetrieveAPIView(generics.RetrieveAPIView):
 class SiteSettingsView(SingletonRetrieveAPIView):
     model = SiteSettings
     serializer_class = SiteSettingsSerializer
+
+
+class HeroSectionView(SingletonRetrieveAPIView):
+    model = HeroSection
+    serializer_class = HeroSectionSerializer
