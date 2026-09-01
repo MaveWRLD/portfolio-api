@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "apps.core",
     "apps.case_studies",
+    "apps.content",
 ]
 
 MIDDLEWARE = [
