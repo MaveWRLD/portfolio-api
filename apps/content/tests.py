@@ -63,3 +63,22 @@ def test_brand_section_reflects_saved_values(client):
     BrandSection.objects.create(pk=1, brands=["Acme", "Globex"])
     response = client.get("/api/content/brand/")
     assert response.json() == {"brands": ["Acme", "Globex"]}
+
+
+@pytest.mark.django_db
+def test_contact_section_get_creates_singleton_and_shapes_response(client):
+    response = client.get("/api/content/contact/")
+    assert response.status_code == 200
+    assert response.json() == {"caption": "", "heading": "", "body": "", "email": "", "phone": ""}
+
+
+@pytest.mark.django_db
+def test_contact_section_reflects_saved_values(client):
+    from apps.content.models import ContactSection
+
+    ContactSection.objects.create(pk=1, caption="Get in touch", heading="Let's talk", body="Reach out.",
+                                   email="jacob@example.com", phone="+1 555 0100")
+    response = client.get("/api/content/contact/")
+    body = response.json()
+    assert body["email"] == "jacob@example.com"
+    assert body["phone"] == "+1 555 0100"

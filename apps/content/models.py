@@ -44,3 +44,18 @@ class BrandSection(models.Model):
 
     def __str__(self):
         return "Brand section"
+
+
+class ContactSection(models.Model):
+    caption = models.CharField(max_length=100, blank=True, default="")
+    heading = models.CharField(max_length=300, blank=True, default="")
+    body = models.TextField(blank=True, default="")
+    email = models.EmailField(blank=True, default="")
+    phone = models.CharField(max_length=50, blank=True, default="")
+
+    class Meta:
+        verbose_name = "Contact section"
+        verbose_name_plural = "Contact section"
+
+    def __str__(self):
+        return "Contact section"
