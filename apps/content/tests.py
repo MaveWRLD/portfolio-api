@@ -156,3 +156,19 @@ def test_ticker_section_reflects_saved_values(client):
     TickerSection.objects.create(pk=1, phrases=["Available for hire", "Based in Accra"])
     response = client.get("/api/content/ticker/")
     assert response.json() == {"phrases": ["Available for hire", "Based in Accra"]}
+
+
+@pytest.mark.django_db
+def test_about_section_get_creates_singleton_and_shapes_response(client):
+    response = client.get("/api/content/about/")
+    assert response.status_code == 200
+    assert response.json() == {"heading": "", "body": ""}
+
+
+@pytest.mark.django_db
+def test_about_section_reflects_saved_values(client):
+    from apps.content.models import AboutSection
+
+    AboutSection.objects.create(pk=1, heading="About", body="I build backend systems.")
+    response = client.get("/api/content/about/")
+    assert response.json() == {"heading": "About", "body": "I build backend systems."}

@@ -107,3 +107,15 @@ class TickerSection(models.Model):
 
     def __str__(self):
         return "Ticker section"
+
+
+class AboutSection(models.Model):
+    heading = models.CharField(max_length=200, blank=True, default="")
+    body = models.TextField(blank=True, default="")
+
+    class Meta:
+        verbose_name = "About section"
+        verbose_name_plural = "About section"
+
+    def __str__(self):
+        return "About section"

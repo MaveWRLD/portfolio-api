@@ -8,7 +8,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from apps.case_studies.views import CaseStudyViewSet
 from apps.content.views import (
     SiteSettingsView, HeroSectionView, BrandSectionView, ContactSectionView, ExperienceSectionView,
-    ProjectsSectionView, FunFactsSectionView, TickerSectionView,
+    ProjectsSectionView, FunFactsSectionView, TickerSectionView, AboutSectionView,
 )
 from rest_framework.routers import DefaultRouter
 
@@ -32,6 +32,7 @@ urlpatterns = [
     path("api/content/projects/", ProjectsSectionView.as_view(), name="content-projects"),
     path("api/content/fun-facts/", FunFactsSectionView.as_view(), name="content-fun-facts"),
     path("api/content/ticker/", TickerSectionView.as_view(), name="content-ticker"),
+    path("api/content/about/", AboutSectionView.as_view(), name="content-about"),
     path("api/health/", include("apps.core.urls")),
 ]
 

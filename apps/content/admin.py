@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import (
     SiteSettings, HeroSection, BrandSection, ContactSection, ExperienceSection, ProjectsSection,
-    FunFactsSection, TickerSection,
+    FunFactsSection, TickerSection, AboutSection,
 )
 
 
@@ -53,3 +53,8 @@ class FunFactsSectionAdmin(SingletonAdmin):
 @admin.register(TickerSection)
 class TickerSectionAdmin(SingletonAdmin):
     list_display = ["__str__"]
+
+
+@admin.register(AboutSection)
+class AboutSectionAdmin(SingletonAdmin):
+    list_display = ["heading"]
