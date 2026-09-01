@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import (
     SiteSettings, HeroSection, BrandSection, ContactSection, ExperienceSection, ProjectsSection,
-    FunFactsSection, TickerSection, AboutSection,
+    FunFactsSection, TickerSection, AboutSection, StackSection,
 )
 
 
@@ -64,3 +64,9 @@ class AboutSectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = AboutSection
         fields = ["heading", "body"]
+
+
+class StackSectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StackSection
+        fields = ["languages", "data", "infra"]

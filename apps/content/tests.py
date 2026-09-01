@@ -172,3 +172,21 @@ def test_about_section_reflects_saved_values(client):
     AboutSection.objects.create(pk=1, heading="About", body="I build backend systems.")
     response = client.get("/api/content/about/")
     assert response.json() == {"heading": "About", "body": "I build backend systems."}
+
+
+@pytest.mark.django_db
+def test_stack_section_get_creates_singleton_and_shapes_response(client):
+    response = client.get("/api/content/stack/")
+    assert response.status_code == 200
+    assert response.json() == {"languages": [], "data": [], "infra": []}
+
+
+@pytest.mark.django_db
+def test_stack_section_reflects_saved_values(client):
+    from apps.content.models import StackSection
+
+    StackSection.objects.create(pk=1, languages=["Go", "Python"], data=["PostgreSQL"], infra=["Docker", "AWS"])
+    response = client.get("/api/content/stack/")
+    body = response.json()
+    assert body["languages"] == ["Go", "Python"]
+    assert body["infra"] == ["Docker", "AWS"]

@@ -119,3 +119,16 @@ class AboutSection(models.Model):
 
     def __str__(self):
         return "About section"
+
+
+class StackSection(models.Model):
+    languages = models.JSONField(default=list, blank=True)
+    data = models.JSONField(default=list, blank=True)
+    infra = models.JSONField(default=list, blank=True)
+
+    class Meta:
+        verbose_name = "Stack section"
+        verbose_name_plural = "Stack section"
+
+    def __str__(self):
+        return "Stack section"
