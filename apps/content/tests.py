@@ -47,3 +47,19 @@ def test_hero_section_reflects_saved_values(client):
     assert body["cvUrl"] == "https://drive.google.com/x"
     assert body["githubUrl"] == "https://github.com/jquaye"
     assert body["linkedinUrl"] == "https://linkedin.com/in/jquaye"
+
+
+@pytest.mark.django_db
+def test_brand_section_get_creates_singleton_and_shapes_response(client):
+    response = client.get("/api/content/brand/")
+    assert response.status_code == 200
+    assert response.json() == {"brands": []}
+
+
+@pytest.mark.django_db
+def test_brand_section_reflects_saved_values(client):
+    from apps.content.models import BrandSection
+
+    BrandSection.objects.create(pk=1, brands=["Acme", "Globex"])
+    response = client.get("/api/content/brand/")
+    assert response.json() == {"brands": ["Acme", "Globex"]}

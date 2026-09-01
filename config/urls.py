@@ -6,7 +6,7 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, Sp
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenBlacklistView
 
 from apps.case_studies.views import CaseStudyViewSet
-from apps.content.views import SiteSettingsView, HeroSectionView
+from apps.content.views import SiteSettingsView, HeroSectionView, BrandSectionView
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
@@ -23,6 +23,7 @@ urlpatterns = [
     path("api/redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
     path("api/content/settings/", SiteSettingsView.as_view(), name="content-settings"),
     path("api/content/hero/", HeroSectionView.as_view(), name="content-hero"),
+    path("api/content/brand/", BrandSectionView.as_view(), name="content-brand"),
     path("api/health/", include("apps.core.urls")),
 ]
 

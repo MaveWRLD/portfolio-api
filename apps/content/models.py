@@ -33,3 +33,14 @@ class HeroSection(models.Model):
 
     def __str__(self):
         return "Hero section"
+
+
+class BrandSection(models.Model):
+    brands = models.JSONField(default=list, blank=True)
+
+    class Meta:
+        verbose_name = "Brand section"
+        verbose_name_plural = "Brand section"
+
+    def __str__(self):
+        return "Brand section"

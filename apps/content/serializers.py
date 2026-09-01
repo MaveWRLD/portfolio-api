@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import SiteSettings, HeroSection
+from .models import SiteSettings, HeroSection, BrandSection
 
 
 class SiteSettingsSerializer(serializers.ModelSerializer):
@@ -19,3 +19,9 @@ class HeroSectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = HeroSection
         fields = ["eyebrow", "headline", "subheading", "photo", "cvUrl", "githubUrl", "linkedinUrl"]
+
+
+class BrandSectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BrandSection
+        fields = ["brands"]
