@@ -96,3 +96,14 @@ class FunFactsSection(models.Model):
 
     def __str__(self):
         return "Fun facts section"
+
+
+class TickerSection(models.Model):
+    phrases = models.JSONField(default=list, blank=True)
+
+    class Meta:
+        verbose_name = "Ticker section"
+        verbose_name_plural = "Ticker section"
+
+    def __str__(self):
+        return "Ticker section"

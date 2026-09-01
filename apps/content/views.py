@@ -1,11 +1,12 @@
 from rest_framework import generics
 from .models import (
     SiteSettings, HeroSection, BrandSection, ContactSection, ExperienceSection, ProjectsSection,
-    FunFactsSection,
+    FunFactsSection, TickerSection,
 )
 from .serializers import (
     SiteSettingsSerializer, HeroSectionSerializer, BrandSectionSerializer, ContactSectionSerializer,
     ExperienceSectionSerializer, ProjectsSectionSerializer, FunFactsSectionSerializer,
+    TickerSectionSerializer,
 )
 
 
@@ -53,3 +54,8 @@ class ProjectsSectionView(SingletonRetrieveAPIView):
 class FunFactsSectionView(SingletonRetrieveAPIView):
     model = FunFactsSection
     serializer_class = FunFactsSectionSerializer
+
+
+class TickerSectionView(SingletonRetrieveAPIView):
+    model = TickerSection
+    serializer_class = TickerSectionSerializer

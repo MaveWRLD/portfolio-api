@@ -140,3 +140,19 @@ def test_fun_facts_section_reflects_saved_values(client):
     body = response.json()
     assert body["stats"] == [{"value": "10+", "label": "Years"}]
     assert body["testimonials"][0]["authorRole"] == "CTO"
+
+
+@pytest.mark.django_db
+def test_ticker_section_get_creates_singleton_and_shapes_response(client):
+    response = client.get("/api/content/ticker/")
+    assert response.status_code == 200
+    assert response.json() == {"phrases": []}
+
+
+@pytest.mark.django_db
+def test_ticker_section_reflects_saved_values(client):
+    from apps.content.models import TickerSection
+
+    TickerSection.objects.create(pk=1, phrases=["Available for hire", "Based in Accra"])
+    response = client.get("/api/content/ticker/")
+    assert response.json() == {"phrases": ["Available for hire", "Based in Accra"]}
