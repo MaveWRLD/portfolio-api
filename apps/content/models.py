@@ -83,3 +83,16 @@ class ProjectsSection(models.Model):
 
     def __str__(self):
         return "Projects section"
+
+
+class FunFactsSection(models.Model):
+    heading = models.CharField(max_length=300, blank=True, default="")
+    stats = models.JSONField(default=list, blank=True)
+    testimonials = models.JSONField(default=list, blank=True)
+
+    class Meta:
+        verbose_name = "Fun facts section"
+        verbose_name_plural = "Fun facts section"
+
+    def __str__(self):
+        return "Fun facts section"

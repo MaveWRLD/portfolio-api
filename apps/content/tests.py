@@ -118,3 +118,25 @@ def test_projects_section_reflects_saved_values(client):
     ProjectsSection.objects.create(pk=1, heading="Selected work")
     response = client.get("/api/content/projects/")
     assert response.json() == {"heading": "Selected work"}
+
+
+@pytest.mark.django_db
+def test_fun_facts_section_get_creates_singleton_and_shapes_response(client):
+    response = client.get("/api/content/fun-facts/")
+    assert response.status_code == 200
+    assert response.json() == {"heading": "", "stats": [], "testimonials": []}
+
+
+@pytest.mark.django_db
+def test_fun_facts_section_reflects_saved_values(client):
+    from apps.content.models import FunFactsSection
+
+    FunFactsSection.objects.create(
+        pk=1, heading="By the numbers",
+        stats=[{"value": "10+", "label": "Years"}],
+        testimonials=[{"category": "Client", "quote": "Great work.", "author": "Jane Doe", "authorRole": "CTO"}],
+    )
+    response = client.get("/api/content/fun-facts/")
+    body = response.json()
+    assert body["stats"] == [{"value": "10+", "label": "Years"}]
+    assert body["testimonials"][0]["authorRole"] == "CTO"
