@@ -6,7 +6,9 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, Sp
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenBlacklistView
 
 from apps.case_studies.views import CaseStudyViewSet
-from apps.content.views import SiteSettingsView, HeroSectionView, BrandSectionView, ContactSectionView
+from apps.content.views import (
+    SiteSettingsView, HeroSectionView, BrandSectionView, ContactSectionView, ExperienceSectionView,
+)
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
@@ -25,6 +27,7 @@ urlpatterns = [
     path("api/content/hero/", HeroSectionView.as_view(), name="content-hero"),
     path("api/content/brand/", BrandSectionView.as_view(), name="content-brand"),
     path("api/content/contact/", ContactSectionView.as_view(), name="content-contact"),
+    path("api/content/experience/", ExperienceSectionView.as_view(), name="content-experience"),
     path("api/health/", include("apps.core.urls")),
 ]
 

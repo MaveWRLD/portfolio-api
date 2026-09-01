@@ -59,3 +59,16 @@ class ContactSection(models.Model):
 
     def __str__(self):
         return "Contact section"
+
+
+class ExperienceSection(models.Model):
+    heading = models.CharField(max_length=300, blank=True, default="")
+    body = models.TextField(blank=True, default="")
+    experiences = models.JSONField(default=list, blank=True)
+
+    class Meta:
+        verbose_name = "Experience section"
+        verbose_name_plural = "Experience section"
+
+    def __str__(self):
+        return "Experience section"
