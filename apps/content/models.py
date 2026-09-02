@@ -142,13 +142,28 @@ class AboutSection(models.Model):
 
 
 class StackSection(models.Model):
-    languages = models.JSONField(default=list, blank=True)
-    data = models.JSONField(default=list, blank=True)
-    infra = models.JSONField(default=list, blank=True)
-
     class Meta:
         verbose_name = "Stack section"
         verbose_name_plural = "Stack section"
 
     def __str__(self):
         return "Stack section"
+
+
+class Technology(models.Model):
+    class Category(models.TextChoices):
+        LANGUAGE = "language", "Language"
+        DATA = "data", "Data"
+        INFRA = "infra", "Infra"
+
+    section = models.ForeignKey(StackSection, related_name="technologies", on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    category = models.CharField(max_length=20, choices=Category.choices)
+    icon = models.CharField(max_length=100, blank=True, default="")  # optional: icon slug/url
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["category", "order", "name"]
+
+    def __str__(self):
+        return f"{self.name} ({self.category})"

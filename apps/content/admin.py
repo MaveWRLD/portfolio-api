@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import (
     SiteSettings, HeroSection, BrandSection, ContactSection, ExperienceSection, ProjectsSection,
-    FunFactsSection, TickerSection, AboutSection, StackSection, Experience,
+    FunFactsSection, TickerSection, AboutSection, StackSection, Experience, Technology,
 )
 
 
@@ -68,6 +68,14 @@ class AboutSectionAdmin(SingletonAdmin):
     list_display = ["heading"]
 
 
+class TechnologyInline(admin.TabularInline):
+    model = Technology
+    extra = 1
+    fields = ("name", "category", "icon", "order")
+    ordering = ("category", "order")
+
+
 @admin.register(StackSection)
 class StackSectionAdmin(SingletonAdmin):
     list_display = ["__str__"]
+    inlines = [TechnologyInline]

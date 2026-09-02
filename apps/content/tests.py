@@ -196,11 +196,16 @@ def test_stack_section_get_creates_singleton_and_shapes_response(client):
 
 @pytest.mark.django_db
 def test_stack_section_reflects_saved_values(client):
-    from apps.content.models import StackSection
+    from apps.content.models import StackSection, Technology
 
-    StackSection.objects.update_or_create(
-        pk=1, defaults={"languages": ["Go", "Python"], "data": ["PostgreSQL"], "infra": ["Docker", "AWS"]}
-    )
+    section, _ = StackSection.objects.get_or_create(pk=1)
+    section.technologies.all().delete()
+    Technology.objects.create(section=section, name="Go", category="language", order=0)
+    Technology.objects.create(section=section, name="Python", category="language", order=1)
+    Technology.objects.create(section=section, name="PostgreSQL", category="data", order=0)
+    Technology.objects.create(section=section, name="Docker", category="infra", order=0)
+    Technology.objects.create(section=section, name="AWS", category="infra", order=1)
+
     response = client.get("/api/content/stack/")
     body = response.json()
     assert body["languages"] == ["Go", "Python"]

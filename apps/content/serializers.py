@@ -80,3 +80,16 @@ class StackSectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = StackSection
         fields = ["languages", "data", "infra"]
+
+    def to_representation(self, instance):
+        # Technology rows are grouped by category back into the
+        # {languages, data, infra} shape the frontend already expects —
+        # keeps that contract stable across the JSONField -> model swap.
+        grouped = {"language": [], "data": [], "infra": []}
+        for tech in instance.technologies.all():
+            grouped.setdefault(tech.category, []).append(tech.name)
+        return {
+            "languages": grouped["language"],
+            "data": grouped["data"],
+            "infra": grouped["infra"],
+        }
