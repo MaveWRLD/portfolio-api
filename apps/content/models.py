@@ -64,7 +64,6 @@ class ContactSection(models.Model):
 class ExperienceSection(models.Model):
     heading = models.CharField(max_length=300, blank=True, default="")
     body = models.TextField(blank=True, default="")
-    experiences = models.JSONField(default=list, blank=True)
 
     class Meta:
         verbose_name = "Experience section"
@@ -72,6 +71,27 @@ class ExperienceSection(models.Model):
 
     def __str__(self):
         return "Experience section"
+
+
+class Experience(models.Model):
+    section = models.ForeignKey(ExperienceSection, related_name="experiences", on_delete=models.CASCADE)
+    role = models.CharField(max_length=200)
+    company = models.CharField(max_length=200)
+    start_date = models.DateField()
+    end_date = models.DateField(null=True, blank=True)  # null = "Present"
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["order", "-start_date"]
+
+    def __str__(self):
+        return f"{self.role} @ {self.company}"
+
+    @property
+    def period_display(self):
+        start = self.start_date.strftime("%b %Y")
+        end = self.end_date.strftime("%b %Y") if self.end_date else "Present"
+        return f"{start} — {end}"
 
 
 class ProjectsSection(models.Model):

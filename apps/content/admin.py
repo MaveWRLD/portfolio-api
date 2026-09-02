@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import (
     SiteSettings, HeroSection, BrandSection, ContactSection, ExperienceSection, ProjectsSection,
-    FunFactsSection, TickerSection, AboutSection, StackSection,
+    FunFactsSection, TickerSection, AboutSection, StackSection, Experience,
 )
 
 
@@ -35,9 +35,17 @@ class ContactSectionAdmin(SingletonAdmin):
     list_display = ["heading", "email"]
 
 
+class ExperienceInline(admin.TabularInline):
+    model = Experience
+    extra = 1
+    fields = ("role", "company", "start_date", "end_date", "order")
+    ordering = ("order",)
+
+
 @admin.register(ExperienceSection)
 class ExperienceSectionAdmin(SingletonAdmin):
     list_display = ["heading"]
+    inlines = [ExperienceInline]
 
 
 @admin.register(ProjectsSection)

@@ -100,19 +100,19 @@ def test_experience_section_get_creates_singleton_and_shapes_response(client):
 
 @pytest.mark.django_db
 def test_experience_section_reflects_saved_values(client):
-    from apps.content.models import ExperienceSection
+    from apps.content.models import ExperienceSection, Experience
 
-    ExperienceSection.objects.update_or_create(
-        pk=1,
-        defaults={
-            "heading": "Experience",
-            "body": "Where I've worked.",
-            "experiences": [{"company": "Acme", "role": "Backend Engineer", "period": "2022–Present"}],
-        },
+    section, _ = ExperienceSection.objects.update_or_create(
+        pk=1, defaults={"heading": "Experience", "body": "Where I've worked."}
+    )
+    section.experiences.all().delete()
+    Experience.objects.create(
+        section=section, company="Acme", role="Backend Engineer",
+        start_date="2022-01-01", end_date=None, order=0,
     )
     response = client.get("/api/content/experience/")
     body = response.json()
-    assert body["experiences"] == [{"company": "Acme", "role": "Backend Engineer", "period": "2022–Present"}]
+    assert body["experiences"] == [{"company": "Acme", "role": "Backend Engineer", "period": "Jan 2022 — Present"}]
 
 
 @pytest.mark.django_db

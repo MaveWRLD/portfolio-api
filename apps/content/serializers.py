@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import (
     SiteSettings, HeroSection, BrandSection, ContactSection, ExperienceSection, ProjectsSection,
-    FunFactsSection, TickerSection, AboutSection, StackSection,
+    FunFactsSection, TickerSection, AboutSection, StackSection, Experience,
 )
 
 
@@ -36,7 +36,17 @@ class ContactSectionSerializer(serializers.ModelSerializer):
         fields = ["caption", "heading", "body", "email", "phone"]
 
 
+class ExperienceSerializer(serializers.ModelSerializer):
+    period = serializers.CharField(source="period_display", read_only=True)
+
+    class Meta:
+        model = Experience
+        fields = ["company", "role", "period"]
+
+
 class ExperienceSectionSerializer(serializers.ModelSerializer):
+    experiences = ExperienceSerializer(many=True, read_only=True)
+
     class Meta:
         model = ExperienceSection
         fields = ["heading", "body", "experiences"]
