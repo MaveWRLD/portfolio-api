@@ -7,6 +7,7 @@ class CaseStudyAdmin(admin.ModelAdmin):
     list_display = ["title", "date", "featured", "created_at"]
     list_filter = ["featured", "date"]
     search_fields = ["title", "slug"]
+    list_per_page = 20
     prepopulated_fields = {"slug": ("title",)}
     readonly_fields = ["created_at", "updated_at"]
     fieldsets = (
