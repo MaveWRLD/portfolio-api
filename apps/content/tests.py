@@ -3,16 +3,20 @@ import pytest
 
 @pytest.mark.django_db
 def test_site_settings_get_creates_singleton_and_shapes_response(client):
+    # A data migration (0011_seed_real_content) pre-populates pk=1 with real
+    # content, so this checks shape, not blank values.
     response = client.get("/api/content/settings/")
     assert response.status_code == 200
-    assert response.json() == {"name": "", "footerTagline": ""}
+    assert set(response.json().keys()) == {"name", "footerTagline"}
 
 
 @pytest.mark.django_db
 def test_site_settings_reflects_saved_values(client):
     from apps.content.models import SiteSettings
 
-    SiteSettings.objects.create(pk=1, name="Jacob Quaye", footer_tagline="Backend engineer")
+    SiteSettings.objects.update_or_create(
+        pk=1, defaults={"name": "Jacob Quaye", "footer_tagline": "Backend engineer"}
+    )
     response = client.get("/api/content/settings/")
     assert response.json() == {"name": "Jacob Quaye", "footerTagline": "Backend engineer"}
 
@@ -32,14 +36,16 @@ def test_hero_section_get_creates_singleton_and_shapes_response(client):
 def test_hero_section_reflects_saved_values(client):
     from apps.content.models import HeroSection
 
-    HeroSection.objects.create(
+    HeroSection.objects.update_or_create(
         pk=1,
-        eyebrow="Hi, I'm Jacob",
-        headline="I build the systems behind the product",
-        subheading="APIs, data pipelines, infrastructure.",
-        cv_url="https://drive.google.com/x",
-        github_url="https://github.com/jquaye",
-        linkedin_url="https://linkedin.com/in/jquaye",
+        defaults={
+            "eyebrow": "Hi, I'm Jacob",
+            "headline": "I build the systems behind the product",
+            "subheading": "APIs, data pipelines, infrastructure.",
+            "cv_url": "https://drive.google.com/x",
+            "github_url": "https://github.com/jquaye",
+            "linkedin_url": "https://linkedin.com/in/jquaye",
+        },
     )
     response = client.get("/api/content/hero/")
     body = response.json()
@@ -86,18 +92,23 @@ def test_contact_section_reflects_saved_values(client):
 
 @pytest.mark.django_db
 def test_experience_section_get_creates_singleton_and_shapes_response(client):
+    # Seeded by 0011_seed_real_content — checks shape, not blank values.
     response = client.get("/api/content/experience/")
     assert response.status_code == 200
-    assert response.json() == {"heading": "", "body": "", "experiences": []}
+    assert set(response.json().keys()) == {"heading", "body", "experiences"}
 
 
 @pytest.mark.django_db
 def test_experience_section_reflects_saved_values(client):
     from apps.content.models import ExperienceSection
 
-    ExperienceSection.objects.create(
-        pk=1, heading="Experience", body="Where I've worked.",
-        experiences=[{"company": "Acme", "role": "Backend Engineer", "period": "2022–Present"}],
+    ExperienceSection.objects.update_or_create(
+        pk=1,
+        defaults={
+            "heading": "Experience",
+            "body": "Where I've worked.",
+            "experiences": [{"company": "Acme", "role": "Backend Engineer", "period": "2022–Present"}],
+        },
     )
     response = client.get("/api/content/experience/")
     body = response.json()
@@ -160,32 +171,36 @@ def test_ticker_section_reflects_saved_values(client):
 
 @pytest.mark.django_db
 def test_about_section_get_creates_singleton_and_shapes_response(client):
+    # Seeded by 0011_seed_real_content — checks shape, not blank values.
     response = client.get("/api/content/about/")
     assert response.status_code == 200
-    assert response.json() == {"heading": "", "body": ""}
+    assert set(response.json().keys()) == {"heading", "body"}
 
 
 @pytest.mark.django_db
 def test_about_section_reflects_saved_values(client):
     from apps.content.models import AboutSection
 
-    AboutSection.objects.create(pk=1, heading="About", body="I build backend systems.")
+    AboutSection.objects.update_or_create(pk=1, defaults={"heading": "About", "body": "I build backend systems."})
     response = client.get("/api/content/about/")
     assert response.json() == {"heading": "About", "body": "I build backend systems."}
 
 
 @pytest.mark.django_db
 def test_stack_section_get_creates_singleton_and_shapes_response(client):
+    # Seeded by 0011_seed_real_content — checks shape, not blank values.
     response = client.get("/api/content/stack/")
     assert response.status_code == 200
-    assert response.json() == {"languages": [], "data": [], "infra": []}
+    assert set(response.json().keys()) == {"languages", "data", "infra"}
 
 
 @pytest.mark.django_db
 def test_stack_section_reflects_saved_values(client):
     from apps.content.models import StackSection
 
-    StackSection.objects.create(pk=1, languages=["Go", "Python"], data=["PostgreSQL"], infra=["Docker", "AWS"])
+    StackSection.objects.update_or_create(
+        pk=1, defaults={"languages": ["Go", "Python"], "data": ["PostgreSQL"], "infra": ["Docker", "AWS"]}
+    )
     response = client.get("/api/content/stack/")
     body = response.json()
     assert body["languages"] == ["Go", "Python"]
