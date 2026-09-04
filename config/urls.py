@@ -7,8 +7,9 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from apps.case_studies.views import CaseStudyViewSet
 from apps.content.views import (
-    SiteSettingsView, HeroSectionView, BrandSectionView, ContactSectionView, ExperienceSectionView,
-    ProjectsSectionView, FunFactsSectionView, TickerSectionView, AboutSectionView, StackSectionView,
+    SiteSettingsView, HeroSectionView, HeroPhotoView, BrandSectionView, ContactSectionView,
+    ExperienceSectionView, ProjectsSectionView, FunFactsSectionView, TickerSectionView, AboutSectionView,
+    StackSectionView,
 )
 from rest_framework.routers import DefaultRouter
 
@@ -26,6 +27,7 @@ urlpatterns = [
     path("api/redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
     path("api/content/settings/", SiteSettingsView.as_view(), name="content-settings"),
     path("api/content/hero/", HeroSectionView.as_view(), name="content-hero"),
+    path("api/content/hero/photo/", HeroPhotoView.as_view(), name="content-hero-photo"),
     path("api/content/brand/", BrandSectionView.as_view(), name="content-brand"),
     path("api/content/contact/", ContactSectionView.as_view(), name="content-contact"),
     path("api/content/experience/", ExperienceSectionView.as_view(), name="content-experience"),

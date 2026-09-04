@@ -1,4 +1,6 @@
+from django.http import HttpResponse, Http404
 from rest_framework import generics
+from rest_framework.views import APIView
 from .models import (
     SiteSettings, HeroSection, BrandSection, ContactSection, ExperienceSection, ProjectsSection,
     FunFactsSection, TickerSection, AboutSection, StackSection,
@@ -29,6 +31,16 @@ class SiteSettingsView(SingletonRetrieveAPIView):
 class HeroSectionView(SingletonRetrieveAPIView):
     model = HeroSection
     serializer_class = HeroSectionSerializer
+
+
+class HeroPhotoView(APIView):
+    """Serves the hero photo bytes straight from Postgres (photo_data)."""
+
+    def get(self, request, *args, **kwargs):
+        obj, _ = HeroSection.objects.get_or_create(pk=1)
+        if not obj.photo_data:
+            raise Http404("No hero photo set")
+        return HttpResponse(bytes(obj.photo_data), content_type=obj.photo_content_type or "application/octet-stream")
 
 
 class BrandSectionView(SingletonRetrieveAPIView):

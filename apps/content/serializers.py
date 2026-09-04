@@ -1,3 +1,4 @@
+from django.urls import reverse
 from rest_framework import serializers
 from .models import (
     SiteSettings, HeroSection, BrandSection, ContactSection, ExperienceSection, ProjectsSection,
@@ -14,7 +15,7 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
 
 
 class HeroSectionSerializer(serializers.ModelSerializer):
-    photo = serializers.ImageField(read_only=True, use_url=True, allow_null=True)
+    photo = serializers.SerializerMethodField()
     cvUrl = serializers.URLField(source="cv_url")
     githubUrl = serializers.URLField(source="github_url")
     linkedinUrl = serializers.URLField(source="linkedin_url")
@@ -22,6 +23,13 @@ class HeroSectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = HeroSection
         fields = ["eyebrow", "headline", "subheading", "photo", "cvUrl", "githubUrl", "linkedinUrl"]
+
+    def get_photo(self, obj):
+        if not obj.photo_data:
+            return None
+        request = self.context.get("request")
+        url = reverse("content-hero-photo")
+        return request.build_absolute_uri(url) if request else url
 
 
 class BrandSectionSerializer(serializers.ModelSerializer):

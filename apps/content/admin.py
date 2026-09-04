@@ -1,3 +1,4 @@
+from django import forms
 from django.contrib import admin
 from .models import (
     SiteSettings, HeroSection, BrandSection, ContactSection, ExperienceSection, ProjectsSection,
@@ -20,9 +21,28 @@ class SiteSettingsAdmin(SingletonAdmin):
     list_display = ["name", "footer_tagline"]
 
 
+class HeroSectionForm(forms.ModelForm):
+    # photo_data is a BinaryField (not directly form-editable), so this
+    # unbound upload field feeds save_model below instead.
+    photo_upload = forms.ImageField(required=False, label="Photo")
+
+    class Meta:
+        model = HeroSection
+        exclude = ["photo_data", "photo_content_type", "photo_filename"]
+
+
 @admin.register(HeroSection)
 class HeroSectionAdmin(SingletonAdmin):
+    form = HeroSectionForm
     list_display = ["headline", "eyebrow"]
+
+    def save_model(self, request, obj, form, change):
+        upload = form.cleaned_data.get("photo_upload")
+        if upload:
+            obj.photo_data = upload.read()
+            obj.photo_content_type = upload.content_type or "application/octet-stream"
+            obj.photo_filename = upload.name
+        super().save_model(request, obj, form, change)
 
 
 @admin.register(BrandSection)

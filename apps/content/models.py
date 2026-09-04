@@ -14,6 +14,8 @@ class SiteSettings(models.Model):
 
 
 def hero_photo_upload_path(instance, filename):
+    # Kept for historical migrations (0002_herosection etc.) that reference
+    # this by import path — no longer used, photo now stores bytes in DB.
     ext = filename.split(".")[-1].lower()
     return f"hero/photo.{ext}"
 
@@ -22,7 +24,11 @@ class HeroSection(models.Model):
     eyebrow = models.CharField(max_length=200, blank=True, default="")
     headline = models.CharField(max_length=300, blank=True, default="")
     subheading = models.CharField(max_length=500, blank=True, default="")
-    photo = models.ImageField(upload_to=hero_photo_upload_path, blank=True, default="")
+    # Photo bytes live in Postgres instead of the filesystem — Render's disk
+    # is ephemeral, so a file saved to media/ is wiped on every redeploy.
+    photo_data = models.BinaryField(blank=True, null=True, editable=False)
+    photo_content_type = models.CharField(max_length=100, blank=True, default="")
+    photo_filename = models.CharField(max_length=255, blank=True, default="")
     cv_url = models.URLField(blank=True, default="")
     github_url = models.URLField(blank=True, default="")
     linkedin_url = models.URLField(blank=True, default="")
