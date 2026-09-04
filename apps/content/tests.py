@@ -75,17 +75,21 @@ def test_brand_section_reflects_saved_values(client):
 
 @pytest.mark.django_db
 def test_contact_section_get_creates_singleton_and_shapes_response(client):
+    # Seeded by 0015_seed_local_snapshot — checks shape, not blank values.
     response = client.get("/api/content/contact/")
     assert response.status_code == 200
-    assert response.json() == {"caption": "", "heading": "", "body": "", "email": "", "phone": ""}
+    assert set(response.json().keys()) == {"caption", "heading", "body", "email", "phone"}
 
 
 @pytest.mark.django_db
 def test_contact_section_reflects_saved_values(client):
     from apps.content.models import ContactSection
 
-    ContactSection.objects.create(pk=1, caption="Get in touch", heading="Let's talk", body="Reach out.",
-                                   email="jacob@example.com", phone="+1 555 0100")
+    ContactSection.objects.update_or_create(
+        pk=1,
+        defaults=dict(caption="Get in touch", heading="Let's talk", body="Reach out.",
+                      email="jacob@example.com", phone="+1 555 0100"),
+    )
     response = client.get("/api/content/contact/")
     body = response.json()
     assert body["email"] == "jacob@example.com"

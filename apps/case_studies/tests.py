@@ -5,15 +5,17 @@ from apps.case_studies.models import CaseStudy
 
 @pytest.mark.django_db
 def test_list_case_studies_empty(client):
+    # Seeded by 0004_seed_local_case_studies (5 featured + 1 unfeatured) —
+    # checks the public list only ever shows the featured ones.
     response = client.get("/api/case-studies/")
     assert response.status_code == 200
-    assert response.json()["results"] == []
+    assert len(response.json()["results"]) == 5
 
 
 @pytest.mark.django_db
 def test_case_study_detail_shapes_response(client):
     CaseStudy.objects.create(
-        slug="ledger",
+        slug="ledger-test",
         title="Ledger",
         date="2025-01-15",
         description="Double-entry accounting microservice.",
@@ -26,7 +28,7 @@ def test_case_study_detail_shapes_response(client):
         outcome="o",
         banner="case_studies/ledger/banner.jpg",
     )
-    response = client.get("/api/case-studies/ledger/")
+    response = client.get("/api/case-studies/ledger-test/")
     assert response.status_code == 200
     body = response.json()
     assert body["title"] == "Ledger"
@@ -48,7 +50,8 @@ def test_unfeatured_case_study_hidden_from_public_list(client):
         banner="case_studies/draft/banner.jpg",
     )
     response = client.get("/api/case-studies/")
-    assert response.json()["results"] == []
+    slugs = [r["slug"] for r in response.json()["results"]]
+    assert "draft" not in slugs
 
 
 @pytest.mark.django_db
