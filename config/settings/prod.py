@@ -23,6 +23,19 @@ if os.getenv("ENABLE_DEBUG_TOOLBAR", "false").lower() == "true":
         "SHOW_TOOLBAR_CALLBACK": _show_toolbar,
     }
 
+    # ProfilingPanel is off by default — it's the one that shows a call
+    # graph (which function actually ate the time), not just SQL vs. total.
+    DEBUG_TOOLBAR_PANELS = [
+        "debug_toolbar.panels.history.HistoryPanel",
+        "debug_toolbar.panels.timer.TimerPanel",
+        "debug_toolbar.panels.headers.HeadersPanel",
+        "debug_toolbar.panels.request.RequestPanel",
+        "debug_toolbar.panels.sql.SQLPanel",
+        "debug_toolbar.panels.cache.CachePanel",
+        "debug_toolbar.panels.templates.TemplatesPanel",
+        "debug_toolbar.panels.profiling.ProfilingPanel",
+    ]
+
 SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
