@@ -30,8 +30,8 @@ docker compose up --build
 # 4. Create superuser (in another terminal)
 docker compose exec api python manage.py createsuperuser
 
-# 5. Seed sample data
-docker compose exec api python scripts/seed.py
+# 5. Add content via /admin/ — content sections are singleton rows,
+#    auto-created empty on first request; case studies are added manually
 ```
 
 **Access:**
@@ -92,9 +92,8 @@ fly secrets set AWS_S3_ACCESS_KEY_ID=xxx AWS_S3_SECRET_ACCESS_KEY=xxx
 # 4. Deploy
 fly deploy
 
-# 5. Run migrations & seed
+# 5. Run migrations, then add content via /admin/
 fly ssh console -C "python manage.py migrate"
-fly ssh console -C "python scripts/seed.py"
 fly ssh console -C "python manage.py createsuperuser"
 ```
 
@@ -113,14 +112,20 @@ portfolio-api/
 │   └── asgi.py
 ├── apps/
 │   ├── core/              # Health checks, shared utilities
-│   └── case_studies/      # Case study models, APIs, admin
+│   ├── case_studies/      # Case study models, APIs, admin
+│   │   ├── models.py
+│   │   ├── serializers.py
+│   │   ├── views.py
+│   │   ├── permissions.py
+│   │   └── admin.py
+│   └── content/            # Singleton page-section models (hero, brand,
+│       │                   # contact, experience, projects, fun facts,
+│       │                   # ticker, site settings) + read-only admin-edited API
 │       ├── models.py
 │       ├── serializers.py
 │       ├── views.py
-│       ├── permissions.py
-│       └── admin.py
-├── scripts/
-│   └── seed.py            # Sample data population
+│       ├── admin.py
+│       └── tests.py
 ├── media/                 # Local media (dev only)
 ├── staticfiles/           # Collected static (prod)
 ├── Dockerfile             # Multi-stage production build
