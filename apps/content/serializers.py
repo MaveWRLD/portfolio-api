@@ -76,10 +76,10 @@ class AboutSectionSerializer(serializers.ModelSerializer):
         fields = ["heading", "body"]
 
 
-class StackSectionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = StackSection
-        fields = ["languages", "data", "infra"]
+class StackSectionSerializer(serializers.Serializer):
+    languages = serializers.ListField(child=serializers.CharField())
+    data = serializers.ListField(child=serializers.CharField())
+    infra = serializers.ListField(child=serializers.CharField())
 
     def to_representation(self, instance):
         # Technology rows are grouped by category back into the
