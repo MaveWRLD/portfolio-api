@@ -23,13 +23,15 @@ def test_site_settings_reflects_saved_values(client):
 
 @pytest.mark.django_db
 def test_hero_section_get_creates_singleton_and_shapes_response(client):
+    # Seeded by 0015_seed_local_snapshot (photo included) — checks shape,
+    # not blank values.
     response = client.get("/api/content/hero/")
     assert response.status_code == 200
     body = response.json()
     assert set(body.keys()) == {
         "eyebrow", "headline", "subheading", "photo", "cvUrl", "githubUrl", "linkedinUrl",
     }
-    assert body["photo"] is None
+    assert body["photo"].startswith("http://testserver/api/content/hero/photo/")
 
 
 @pytest.mark.django_db
