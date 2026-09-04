@@ -1,2 +1,2 @@
 web: bash start.sh
-release: python manage.py migrate --noinput
+release: python manage.py migrate --noinput && python manage.py create_superuser
