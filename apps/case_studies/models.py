@@ -17,7 +17,7 @@ class CaseStudy(models.Model):
     tags = models.JSONField(default=list, blank=True)
     source_url = models.URLField(blank=True, default="")
     featured = models.BooleanField(default=False)
-    banner = models.ImageField(upload_to=case_study_upload_path)
+    banner = models.ImageField(upload_to=case_study_upload_path, blank=True, default="")
     problem = models.TextField(blank=True, default="")
     architecture = models.TextField(blank=True, default="")
     my_role = models.TextField(blank=True, default="")
