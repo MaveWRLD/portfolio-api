@@ -8,11 +8,7 @@ CSRF_TRUSTED_ORIGINS = ["http://localhost:5173", "http://localhost:3000", "http:
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
-INSTALLED_APPS += ["debug_toolbar"]
-MIDDLEWARE = ["debug_toolbar.middleware.DebugToolbarMiddleware"] + MIDDLEWARE
+INSTALLED_APPS += ["silk"]
+MIDDLEWARE = ["silk.middleware.SilkyMiddleware"] + MIDDLEWARE
 
-INTERNAL_IPS = ["127.0.0.1"]
-
-DEBUG_TOOLBAR_CONFIG = {
-    "SHOW_TOOLBAR_CALLBACK": lambda request: True,
-}
+SILKY_PYTHON_PROFILER = True
