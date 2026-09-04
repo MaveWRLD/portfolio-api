@@ -19,6 +19,3 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 # DEBUG_TOOLBAR_CONFIG = {
 #     "SHOW_TOOLBAR_CALLBACK": lambda request: True,
 # }
-
-# MinIO uses self-signed certs, disable SSL verification for local dev
-AWS_S3_VERIFY = False
