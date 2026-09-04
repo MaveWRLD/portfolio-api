@@ -24,6 +24,9 @@ dev = [
     "black>=24.0",
 ]
 
+[tool.poetry]
+package-mode = false
+
 [build-system]
 requires = ["setuptools>=68.0"]
 build-backend = "setuptools.build_meta"
