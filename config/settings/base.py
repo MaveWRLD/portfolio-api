@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "corsheaders",
     "drf_spectacular",
+    "django_filters",
     "apps.core",
     "apps.case_studies",
     "apps.content",
