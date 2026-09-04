@@ -14,7 +14,11 @@ if os.getenv("ENABLE_SILK", "false").lower() == "true":
     INSTALLED_APPS += ["silk"]
     MIDDLEWARE = ["silk.middleware.SilkyMiddleware"] + MIDDLEWARE
 
-    SILKY_PYTHON_PROFILER = True
+    # Left off: gunicorn runs gthread workers here, and cProfile's per-thread
+    # enable() collides across concurrent threads on the same worker
+    # ("Another profiling tool is already active"). SQL/request logging
+    # below doesn't need it — enable locally (sync/single-thread) if you
+    # need the call graph.
     SILKY_AUTHENTICATION = True
     SILKY_AUTHORISATION = True
     SILKY_PERMISSIONS = lambda user: user.is_staff  # noqa: E731
