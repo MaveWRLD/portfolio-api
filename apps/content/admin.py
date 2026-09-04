@@ -1,9 +1,38 @@
+import io
+
+from PIL import Image
 from django import forms
 from django.contrib import admin
 from .models import (
     SiteSettings, HeroSection, BrandSection, ContactSection, ExperienceSection, ProjectsSection,
     FunFactsSection, TickerSection, AboutSection, StackSection, Experience, Technology,
 )
+
+# Hero photo is displayed well under this width — re-encoding to it keeps
+# retina sharpness while cutting a multi-MB phone-camera PNG down to ~60KB.
+HERO_PHOTO_MAX_WIDTH = 700
+
+
+def process_hero_photo(upload):
+    """Resize + re-encode an uploaded hero photo as WebP.
+
+    Returns (bytes, content_type). Falls back to the raw upload if Pillow
+    can't decode it (e.g. an unsupported format slipped past ImageField).
+    """
+    try:
+        image = Image.open(upload)
+        image.load()
+    except Exception:
+        upload.seek(0)
+        return upload.read(), upload.content_type or "application/octet-stream"
+
+    if image.width > HERO_PHOTO_MAX_WIDTH:
+        ratio = HERO_PHOTO_MAX_WIDTH / image.width
+        image = image.resize((HERO_PHOTO_MAX_WIDTH, round(image.height * ratio)), Image.LANCZOS)
+
+    buf = io.BytesIO()
+    image.save(buf, format="WEBP", quality=85, method=6)
+    return buf.getvalue(), "image/webp"
 
 
 class SingletonAdmin(admin.ModelAdmin):
@@ -39,8 +68,7 @@ class HeroSectionAdmin(SingletonAdmin):
     def save_model(self, request, obj, form, change):
         upload = form.cleaned_data.get("photo_upload")
         if upload:
-            obj.photo_data = upload.read()
-            obj.photo_content_type = upload.content_type or "application/octet-stream"
+            obj.photo_data, obj.photo_content_type = process_hero_photo(upload)
             obj.photo_filename = upload.name
         super().save_model(request, obj, form, change)
 

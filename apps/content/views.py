@@ -1,4 +1,6 @@
-from django.http import HttpResponse, Http404
+import hashlib
+
+from django.http import HttpResponse, HttpResponseNotModified, Http404
 from rest_framework import generics
 from rest_framework.views import APIView
 from .models import (
@@ -34,13 +36,26 @@ class HeroSectionView(SingletonRetrieveAPIView):
 
 
 class HeroPhotoView(APIView):
-    """Serves the hero photo bytes straight from Postgres (photo_data)."""
+    """Serves the hero photo bytes straight from Postgres (photo_data).
+
+    ETag is a hash of the bytes themselves, so it changes automatically
+    whenever the admin swaps the photo — no manual cache purge needed for
+    browser/CDN revalidation.
+    """
 
     def get(self, request, *args, **kwargs):
         obj, _ = HeroSection.objects.get_or_create(pk=1)
         if not obj.photo_data:
             raise Http404("No hero photo set")
-        return HttpResponse(bytes(obj.photo_data), content_type=obj.photo_content_type or "application/octet-stream")
+
+        etag = f'"{hashlib.sha256(bytes(obj.photo_data)).hexdigest()[:16]}"'
+        if request.headers.get("If-None-Match") == etag:
+            return HttpResponseNotModified()
+
+        response = HttpResponse(bytes(obj.photo_data), content_type=obj.photo_content_type or "application/octet-stream")
+        response["ETag"] = etag
+        response["Cache-Control"] = "public, max-age=3600, stale-while-revalidate=86400"
+        return response
 
 
 class BrandSectionView(SingletonRetrieveAPIView):
